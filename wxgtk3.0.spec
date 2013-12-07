@@ -5,7 +5,7 @@
 Summary:	GTK+ port of the wxWidgets library
 Name:		wxgtk%{api}
 Version:	3.0.0
-Release:	5
+Release:	6
 License:	wxWidgets Library Licence
 Group:		System/Libraries
 Url:		http://www.wxwidgets.org/
