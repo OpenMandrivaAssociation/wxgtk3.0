@@ -4,8 +4,8 @@
 
 Summary:	GTK+ port of the wxWidgets library
 Name:		wxgtk%{api}
-Version:	3.0.0
-Release:	8
+Version:	3.0.2
+Release:	1
 License:	wxWidgets Library Licence
 Group:		System/Libraries
 Url:		http://www.wxwidgets.org/
@@ -15,7 +15,6 @@ BuildRequires:	bison
 BuildRequires:	flex
 BuildRequires:	jpeg-devel
 BuildRequires:	pkgconfig(expat)
-BuildRequires:	pkgconfig(gconf-2.0)
 BuildRequires:	pkgconfig(glu)
 BuildRequires:	pkgconfig(gstreamer-0.10)
 BuildRequires:	pkgconfig(gstreamer-plugins-base-0.10)
@@ -438,7 +437,7 @@ sed -i -e 's|/lib|/%{_lib}|' src/unix/stdpaths.cpp
 CFLAGS="%{optflags} -fno-strict-aliasing"
 CXXFLAGS="%{optflags} -fno-strict-aliasing"
 
-%configure2_5x --enable-unicode \
+%configure --enable-unicode \
 	--without-odbc \
 	--with-opengl \
 	--enable-gtk2 --with-gtk  \
