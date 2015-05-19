@@ -5,19 +5,20 @@
 Summary:	GTK+ port of the wxWidgets library
 Name:		wxgtk%{api}
 Version:	3.0.2
-Release:	2
+Release:	3
 License:	wxWidgets Library Licence
 Group:		System/Libraries
 Url:		http://www.wxwidgets.org/
 Source0:	http://prdownloads.sourceforge.net/wxwindows/%{oname}-%{version}.tar.bz2
 Patch0:		wxWidgets-3.0.0-locales.patch
+Patch1:		gst1.0.patch
 BuildRequires:	bison
 BuildRequires:	flex
 BuildRequires:	jpeg-devel
 BuildRequires:	pkgconfig(expat)
 BuildRequires:	pkgconfig(glu)
-BuildRequires:	pkgconfig(gstreamer-0.10)
-BuildRequires:	pkgconfig(gstreamer-plugins-base-0.10)
+BuildRequires:	pkgconfig(gstreamer-1.0)
+BuildRequires:	pkgconfig(gstreamer-plugins-base-1.0)
 # GTK3 leads to conflicting declarations etc for wx-based applications
 BuildRequires:	pkgconfig(gtk+-2.0)
 BuildRequires:	pkgconfig(libpng)
@@ -423,7 +424,9 @@ the wxWidgets library.
 %prep
 %setup -q -n %{oname}-%{version}
 %patch0 -p1
-
+%patch1 -p1
+sh autogen.sh
+#autoreconf -fiv -I `pwd`/build/aclocal
 # fix plugin dir for 64-bit
 sed -i -e 's|/lib|/%{_lib}|' src/unix/stdpaths.cpp
 
@@ -438,6 +441,7 @@ CFLAGS="%{optflags} -fno-strict-aliasing"
 CXXFLAGS="%{optflags} -fno-strict-aliasing"
 
 %configure --enable-unicode \
+	--enable-compat28 \
 	--without-odbc \
 	--with-opengl \
 	--enable-gtk2 --with-gtk  \
