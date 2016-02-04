@@ -1,0 +1,52 @@
+From ed817dd3667306fc5079068734a6b89203129607 Mon Sep 17 00:00:00 2001
+From: Paul Cornett <paulcor@users.noreply.github.com>
+Date: Sun, 1 Nov 2015 19:46:01 -0800
+Subject: [PATCH] Fix drawing checkbox and radiobutton in checked state with
+ GTK+ >= 3.14, see #17240
+
+---
+ src/gtk/renderer.cpp | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/src/gtk/renderer.cpp b/src/gtk/renderer.cpp
+index 93d660f..a80ebb0 100644
+--- a/src/gtk/renderer.cpp
++++ b/src/gtk/renderer.cpp
+@@ -41,6 +41,10 @@
+ #include "wx/gtk/private.h"
+ #include "wx/gtk/private/gtk2-compat.h"
+ 
++#if defined(__WXGTK3__) && !GTK_CHECK_VERSION(3,14,0)
++    #define GTK_STATE_FLAG_CHECKED (1 << 11)
++#endif
++
+ // ----------------------------------------------------------------------------
+ // wxRendererGTK: our wxRendererNative implementation
+ // ----------------------------------------------------------------------------
+@@ -551,7 +555,11 @@ wxRendererGTK::DrawCheckBox(wxWindow* win,
+     {
+         int stateFlags = GTK_STATE_FLAG_NORMAL;
+         if (flags & wxCONTROL_CHECKED)
++        {
+             stateFlags = GTK_STATE_FLAG_ACTIVE;
++            if (gtk_check_version(3,14,0) == NULL)
++                stateFlags = GTK_STATE_FLAG_CHECKED;
++        }
+         if (flags & wxCONTROL_DISABLED)
+             stateFlags |= GTK_STATE_FLAG_INSENSITIVE;
+         if (flags & wxCONTROL_UNDETERMINED)
+@@ -866,7 +874,11 @@ void wxRendererGTK::DrawRadioBitmap(wxWindow* win, wxDC& dc, const wxRect& rect,
+ #ifdef __WXGTK3__
+     int state = GTK_STATE_FLAG_NORMAL;
+     if (flags & wxCONTROL_CHECKED)
++    {
+         state = GTK_STATE_FLAG_ACTIVE;
++        if (gtk_check_version(3,14,0) == NULL)
++            state = GTK_STATE_FLAG_CHECKED;
++    }
+     else if (flags & wxCONTROL_UNDETERMINED)
+         state = GTK_STATE_FLAG_INCONSISTENT;
+     if (flags & wxCONTROL_DISABLED)
+-- 
+2.7.0
+

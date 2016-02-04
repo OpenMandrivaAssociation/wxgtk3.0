@@ -1,0 +1,181 @@
+diff -up ./src/gtk/control.cpp.orig ./src/gtk/control.cpp
+--- ./src/gtk/control.cpp.orig	2016-01-08 16:49:45.140814421 +0200
++++ ./src/gtk/control.cpp	2016-01-08 16:53:18.614594935 +0200
+@@ -251,13 +251,16 @@ wxControl::GetDefaultAttributesFromGTKWi
+     }
+     GtkStyleContext* sc = gtk_widget_get_style_context(widget);
+     GdkRGBA c;
+-    gtk_style_context_get_color(sc, stateFlag, &c);
++    gtk_style_context_save(sc);
++    gtk_style_context_set_state(sc, stateFlag);
++    gtk_style_context_get_color(sc, gtk_style_context_get_state(sc), &c);
+     attr.colFg = wxColour(c);
+-    gtk_style_context_get_background_color(sc, stateFlag, &c);
++    gtk_style_context_get_background_color(sc, gtk_style_context_get_state(sc), &c);
+     attr.colBg = wxColour(c);
+     wxNativeFontInfo info;
+     gtk_style_context_get(
+-        sc, stateFlag, GTK_STYLE_PROPERTY_FONT, &info.description, NULL);
++        sc, gtk_style_context_get_state(sc), GTK_STYLE_PROPERTY_FONT, &info.description, NULL);
++    gtk_style_context_restore(sc);
+     attr.font = wxFont(info);
+ #else
+     GtkStyle* style;
+diff -up ./src/gtk/settings.cpp.orig ./src/gtk/settings.cpp
+--- ./src/gtk/settings.cpp.orig	2016-01-08 17:08:22.599827553 +0200
++++ ./src/gtk/settings.cpp	2016-01-08 17:15:38.742358387 +0200
+@@ -155,34 +155,52 @@ static GtkWidget* ToolTipWidget()
+ static void bg(GtkWidget* widget, GtkStateFlags state, GdkRGBA& gdkRGBA)
+ {
+     GtkStyleContext* sc = gtk_widget_get_style_context(widget);
+-    gtk_style_context_get_background_color(sc, state, &gdkRGBA);
++    gtk_style_context_save(sc);
++    gtk_style_context_set_state(sc, state);
++    gtk_style_context_get_background_color(sc, gtk_style_context_get_state(sc), &gdkRGBA);
++    gtk_style_context_restore(sc);
+     if (gdkRGBA.alpha <= 0)
+     {
+         widget = gtk_widget_get_parent(GTK_WIDGET(ContainerWidget()));
+         sc = gtk_widget_get_style_context(widget);
+-        gtk_style_context_get_background_color(sc, state, &gdkRGBA);
++        gtk_style_context_save(sc);
++        gtk_style_context_set_state(sc, state);
++        gtk_style_context_get_background_color(sc, gtk_style_context_get_state(sc), &gdkRGBA);
++        gtk_style_context_restore(sc);
+     }
+ }
+ static void fg(GtkWidget* widget, GtkStateFlags state, GdkRGBA& gdkRGBA)
+ {
+     GtkStyleContext* sc = gtk_widget_get_style_context(widget);
+-    gtk_style_context_get_color(sc, state, &gdkRGBA);
++    gtk_style_context_save(sc);
++    gtk_style_context_set_state(sc, state);
++    gtk_style_context_get_color(sc, gtk_style_context_get_state(sc), &gdkRGBA);
++    gtk_style_context_restore(sc);
+     if (gdkRGBA.alpha <= 0)
+     {
+         widget = gtk_widget_get_parent(GTK_WIDGET(ContainerWidget()));
+         sc = gtk_widget_get_style_context(widget);
+-        gtk_style_context_get_color(sc, state, &gdkRGBA);
++        gtk_style_context_save(sc);
++        gtk_style_context_set_state(sc, state);
++        gtk_style_context_get_color(sc, gtk_style_context_get_state(sc), &gdkRGBA);
++        gtk_style_context_restore(sc);
+     }
+ }
+ static void border(GtkWidget* widget, GtkStateFlags state, GdkRGBA& gdkRGBA)
+ {
+     GtkStyleContext* sc = gtk_widget_get_style_context(widget);
+-    gtk_style_context_get_border_color(sc, state, &gdkRGBA);
++    gtk_style_context_save(sc);
++    gtk_style_context_set_state(sc, state);
++    gtk_style_context_get_border_color(sc, gtk_style_context_get_state(sc), &gdkRGBA);
++    gtk_style_context_restore(sc);
+     if (gdkRGBA.alpha <= 0)
+     {
+         widget = gtk_widget_get_parent(GTK_WIDGET(ContainerWidget()));
+         sc = gtk_widget_get_style_context(widget);
+-        gtk_style_context_get_border_color(sc, state, &gdkRGBA);
++        gtk_style_context_save(sc);
++        gtk_style_context_set_state(sc, state);
++        gtk_style_context_get_border_color(sc, gtk_style_context_get_state(sc), &gdkRGBA);
++        gtk_style_context_restore(sc);
+     }
+ }
+ 
+@@ -453,8 +471,11 @@ wxFont wxSystemSettingsNative::GetFont(
+                 wxNativeFontInfo info;
+ #ifdef __WXGTK3__
+                 GtkStyleContext* sc = gtk_widget_get_style_context(ButtonWidget());
+-                gtk_style_context_get(sc, GTK_STATE_FLAG_NORMAL,
++                gtk_style_context_save(sc);
++                gtk_style_context_set_state(sc, GTK_STATE_FLAG_NORMAL);
++                gtk_style_context_get(sc, gtk_style_context_get_state(sc),
+                     GTK_STYLE_PROPERTY_FONT, &info.description, NULL);
++                gtk_style_context_restore(sc);
+ #else
+                 info.description = ButtonStyle()->font_desc;
+ #endif
+diff -up ./src/gtk/spinbutt.cpp.orig ./src/gtk/spinbutt.cpp
+--- ./src/gtk/spinbutt.cpp.orig	2016-01-08 16:58:15.240182620 +0200
++++ ./src/gtk/spinbutt.cpp	2016-01-08 16:59:21.233644328 +0200
+@@ -192,7 +192,10 @@ wxSize wxSpinButton::DoGetBestSize() con
+ #ifdef __WXGTK3__
+     GtkStyleContext* sc = gtk_widget_get_style_context(m_widget);
+     GtkBorder pad = { 0, 0, 0, 0 };
+-    gtk_style_context_get_padding(sc, GtkStateFlags(0), &pad);
++    gtk_style_context_save(sc);
++    gtk_style_context_set_state(sc, GtkStateFlags(0));
++    gtk_style_context_get_padding(sc, gtk_style_context_get_state(sc), &pad);
++    gtk_style_context_restore(sc);
+     best.x -= pad.left + pad.right;
+ #else
+     gtk_widget_ensure_style(m_widget);
+diff -up ./src/gtk/textctrl.cpp.orig ./src/gtk/textctrl.cpp
+--- ./src/gtk/textctrl.cpp.orig	2016-01-08 16:59:40.292911294 +0200
++++ ./src/gtk/textctrl.cpp	2016-01-08 17:03:14.814661591 +0200
+@@ -1817,15 +1817,15 @@ void wxTextCtrl::DoApplyWidgetStyle(GtkR
+     {
+         GdkRGBA fg_orig, bg_orig;
+         GtkStyleContext* context = gtk_widget_get_style_context(m_text);
++        gtk_style_context_save(context);
+         if (IsMultiLine())
+         {
+-            gtk_style_context_save(context);
+             gtk_style_context_add_class(context, GTK_STYLE_CLASS_VIEW);
+         }
+-        gtk_style_context_get_color(context, selectedFocused, &fg_orig);
+-        gtk_style_context_get_background_color(context, selectedFocused, &bg_orig);
+-        if (IsMultiLine())
+-            gtk_style_context_restore(context);
++        gtk_style_context_set_state(context, selectedFocused);
++        gtk_style_context_get_color(context, gtk_style_context_get_state(context), &fg_orig);
++        gtk_style_context_get_background_color(context, gtk_style_context_get_state(context), &bg_orig);
++        gtk_style_context_restore(context);
+ 
+         if (fg_ok)
+             gtk_widget_override_color(m_text, selectedFocused, &fg_orig);
+diff -up ./src/gtk/window.cpp.orig ./src/gtk/window.cpp
+--- ./src/gtk/window.cpp.orig	2016-01-08 17:03:52.023230841 +0200
++++ ./src/gtk/window.cpp	2016-01-08 17:07:56.576828039 +0200
+@@ -304,7 +304,10 @@ draw_border(GtkWidget* widget, GdkEventE
+ #ifdef __WXGTK3__
+         GtkStyleContext* sc = gtk_widget_get_style_context(win->m_wxwindow);
+         GdkRGBA c;
+-        gtk_style_context_get_border_color(sc, GTK_STATE_FLAG_NORMAL, &c);
++        gtk_style_context_save(sc);
++        gtk_style_context_set_state(sc, GTK_STATE_FLAG_NORMAL);
++        gtk_style_context_get_border_color(sc, gtk_style_context_get_state(sc), &c);
++        gtk_style_context_restore(sc);
+         gdk_cairo_set_source_rgba(cr, &c);
+         cairo_set_line_width(cr, 1);
+         cairo_rectangle(cr, x + 0.5, y + 0.5, w - 1, h - 1);
+@@ -4376,8 +4379,11 @@ void wxWindowGTK::GTKApplyStyle(GtkWidge
+     cairo_pattern_t* pattern = NULL;
+     if (m_backgroundColour.IsOk())
+     {
++        gtk_style_context_save(context);
++        gtk_style_context_set_state(context, GTK_STATE_FLAG_NORMAL);
+         gtk_style_context_get(context,
+-            GTK_STATE_FLAG_NORMAL, "background-image", &pattern, NULL);
++            gtk_style_context_get_state(context), "background-image", &pattern, NULL);
++        gtk_style_context_restore(context);
+     }
+     if (pattern)
+     {
+diff -up ./src/gtk/win_gtk.cpp.orig ./src/gtk/win_gtk.cpp
+--- ./src/gtk/win_gtk.cpp.orig	2016-01-08 16:55:15.044114703 +0200
++++ ./src/gtk/win_gtk.cpp	2016-01-08 16:57:00.030075686 +0200
+@@ -452,7 +452,11 @@ void wxPizza::get_border(GtkBorder& bord
+         else
+             sc = gtk_widget_get_style_context(wxGTKPrivate::GetEntryWidget());
+ 
+-        gtk_style_context_get_border(sc, GTK_STATE_FLAG_NORMAL, &border);
++        gtk_style_context_save(sc);
++        gtk_style_context_set_state(sc, GTK_STATE_FLAG_NORMAL);
++        gtk_style_context_get_border(sc, gtk_style_context_get_state(sc), &border);
++        gtk_style_context_restore(sc);
++
+ #else // !__WXGTK3__
+         GtkStyle* style;
+         if (m_windowStyle & (wxHSCROLL | wxVSCROLL))

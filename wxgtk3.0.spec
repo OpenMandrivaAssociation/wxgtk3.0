@@ -20,7 +20,7 @@
 Summary:	GTK+ port of the wxWidgets library
 Name:		wxgtk%{api}
 Version:	3.0.2
-Release:	5
+Release:	6
 License:	wxWidgets Library Licence
 Group:		System/Libraries
 Url:		http://www.wxwidgets.org/
@@ -31,6 +31,9 @@ Patch1:		gst1.0.patch
 # however clang just hard codes a def to an old abi version, its not actually
 # a different abi
 Patch2:		wxWidgets-3.0.2-disable_abi_check.patch
+Patch3:		0001-Fix-drawing-checkbox-and-radiobutton-in-checked-state.patch
+Patch4:		wxGTK3-3.0.2-upstreamfixes.patch
+Patch5:		wxGTK3-3.0.2-gtk3.19-fixes.patch
 BuildRequires:	bison
 BuildRequires:	flex
 BuildRequires:	jpeg-devel
