@@ -2,6 +2,9 @@
 %define		api	3.0
 %define		major	0
 
+%global commit0 f90b768ea040529fe33fda7e20f5fe2765de1dd0
+%global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
+
 # for obsoletes
 %define libwx_gtk2u_adv %mklibname wx_gtk2u_adv %{api} %{major}
 %define libwx_gtk2u_aui %mklibname wx_gtk2u_aui %{api} %{major}
@@ -19,21 +22,22 @@
 
 Summary:	GTK+ port of the wxWidgets library
 Name:		wxgtk%{api}
-Version:	3.0.2
-Release:	8
+Version:	3.0.3
+Release:	0.1
 License:	wxWidgets Library Licence
 Group:		System/Libraries
 Url:		http://www.wxwidgets.org/
+%if %{commit0}
+Source0:	%{oname}-%{shortcommit0}.tar.gz
+%else
 Source0:	http://prdownloads.sourceforge.net/wxwindows/%{oname}-%{version}.tar.bz2
+%endif
 Patch0:		wxWidgets-3.0.0-locales.patch
 Patch1:		gst1.0.patch
 # abi check is useless as it reports different abi used between clang and gcc
 # however clang just hard codes a def to an old abi version, its not actually
 # a different abi
 Patch2:		wxWidgets-3.0.2-disable_abi_check.patch
-Patch3:		0001-Fix-drawing-checkbox-and-radiobutton-in-checked-state.patch
-Patch4:		wxGTK3-3.0.2-upstreamfixes.patch
-Patch5:		wxGTK3-3.0.2-gtk3.19-fixes.patch
 BuildRequires:	bison
 BuildRequires:	flex
 BuildRequires:	jpeg-devel
@@ -456,7 +460,11 @@ the wxWidgets library.
 #----------------------------------------------------------------------------
 
 %prep
+%if %{commit0}
+%setup -q -n %{oname}-%{commit0}
+%else
 %setup -q -n %{oname}-%{version}
+%endif
 %apply_patches
 
 sh autogen.sh
@@ -474,6 +482,13 @@ sed -i -e 's|/lib|/%{_lib}|' src/unix/stdpaths.cpp
 CFLAGS="%{optflags} -fno-strict-aliasing"
 CXXFLAGS="%{optflags} -fno-strict-aliasing"
 
+%if %{commit0}
+#For snapshots, mo files need to be generated
+pushd locale
+make allmo
+popd
+%endif
+
 %configure --enable-unicode \
 	--enable-compat28 \
 	--without-odbc \
@@ -488,6 +503,7 @@ CXXFLAGS="%{optflags} -fno-strict-aliasing"
 	--with-zlib=sys \
 	--disable-optimise \
 	--enable-calendar \
+	--enable-intl \
 	--enable-wave \
 	--enable-fraction \
 	--enable-wxprintfv \
@@ -506,8 +522,6 @@ CXXFLAGS="%{optflags} -fno-strict-aliasing"
 	--enable-dataviewctrl
 
 %make
-
-# make -C locale
 
 %install
 %makeinstall_std

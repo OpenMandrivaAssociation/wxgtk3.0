@@ -2,3 +2,4 @@ removed_sources:
   wxWidgets-3.0.0.tar.bz2: 756a9c54d1f411e262f03bacb78ccef085a9880a
 sources:
   wxWidgets-3.0.2.tar.bz2: 6461eab4428c0a8b9e41781b8787510484dea800
+  wxWidgets-f90b768.tar.gz: baf7341b2c908892b3d144c68dd5c2239df63290

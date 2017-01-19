@@ -27,7 +27,7 @@
  
  // xoverlay/video stuff, gst-gconf for 0.8
 -#if GST_VERSION_MAJOR > 0 || GST_VERSION_MINOR >= 10
-+#if GST_VERSION_MAJOR == 0 || GST_VERSION_MINOR >= 10
++#if GST_VERSION_MAJOR == 0 && GST_VERSION_MINOR >= 10
  #   include <gst/interfaces/xoverlay.h>
 +#elif GST_VERSION_MAJOR == 1
 +#   include <gst/video/videooverlay.h>
