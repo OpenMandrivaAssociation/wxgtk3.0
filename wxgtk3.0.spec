@@ -5,21 +5,6 @@
 %global commit0 f90b768ea040529fe33fda7e20f5fe2765de1dd0
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
-# for obsoletes
-%define libwx_gtk2u_adv %mklibname wx_gtk2u_adv %{api} %{major}
-%define libwx_gtk2u_aui %mklibname wx_gtk2u_aui %{api} %{major}
-%define libwx_gtk2u_core %mklibname wx_gtk2u_core %{api} %{major}
-%define libwx_gtk2u_gl %mklibname wx_gtk2u_gl %{api} %{major}
-%define libwx_gtk2u_html %mklibname wx_gtk2u_html %{api} %{major}
-%define libwx_gtk2u_media %mklibname wx_gtk2u_media %{api} %{major}
-%define libwx_gtk2u_propgrid %mklibname wx_gtk2u_propgrid %{api} %{major}
-%define libwx_gtk2u_qa %mklibname wx_gtk2u_qa %{api} %{major}
-%define libwx_gtk2u_ribbon %mklibname wx_gtk2u_ribbon %{api} %{major}
-%define libwx_gtk2u_richtext %mklibname wx_gtk2u_richtext %{api} %{major}
-%define libwx_gtk2u_stc %mklibname wx_gtk2u_stc %{api} %{major}
-%define libwx_gtk2u_webview %mklibname wx_gtk2u_webview %{api} %{major}
-%define libwx_gtk2u_xrc %mklibname wx_gtk2u_xrc %{api} %{major}
-
 Summary:	GTK+ port of the wxWidgets library
 Name:		wxgtk%{api}
 Version:	3.0.3
@@ -132,7 +117,6 @@ linked with the unicode enabled version of %{name}.
 Summary:	Shared library of wxGTK - Unicode enabled
 Group:		System/Libraries
 Requires:	%{name} = %{EVRD}
-Obsoletes:	%libwx_gtk2u_adv
 
 %description -n %{libwx_gtk3u_adv}
 wxWidgets is a free C++ library for cross-platform GUI development.
@@ -153,7 +137,6 @@ linked with the unicode enabled version of %{name}.
 Summary:	Shared library of wxGTK - Unicode enabled
 Group:		System/Libraries
 Requires:	%{name} = %{EVRD}
-Obsoletes:	%libwx_gtk2u_aui
 
 %description -n %{libwx_gtk3u_aui}
 wxWidgets is a free C++ library for cross-platform GUI development.
@@ -174,7 +157,6 @@ linked with the unicode enabled version of %{name}.
 Summary:	Shared library of wxGTK - Unicode enabled
 Group:		System/Libraries
 Requires:	%{name} = %{EVRD}
-Obsoletes:	%libwx_gtk2u_core
 
 %description -n %{libwx_gtk3u_core}
 wxWidgets is a free C++ library for cross-platform GUI development.
@@ -195,7 +177,6 @@ linked with the unicode enabled version of %{name}.
 Summary:	OpenGL shared library of wxGTK - Unicode enabled
 Group:		System/Libraries
 Requires:	%{name} = %{EVRD}
-Obsoletes:	%{libwx_gtk2u_gl}
 
 %description -n %{libwx_gtk3u_gl}
 wxWidgets is a free C++ library for cross-platform GUI development.
@@ -216,7 +197,6 @@ linked with the unicode enabled version of %{name}.
 Summary:	Shared library of wxGTK - Unicode enabled
 Group:		System/Libraries
 Requires:	%{name} = %{EVRD}
-Obsoletes:	%{libwx_gtk2u_html}
 
 %description -n %{libwx_gtk3u_html}
 wxWidgets is a free C++ library for cross-platform GUI development.
@@ -237,7 +217,6 @@ linked with the unicode enabled version of %{name}.
 Summary:	Shared library of wxGTK - Unicode enabled
 Group:		System/Libraries
 Requires:	%{name} = %{EVRD}
-Obsoletes:	%{libwx_gtk2u_media}
 
 %description -n %{libwx_gtk3u_media}
 wxWidgets is a free C++ library for cross-platform GUI development.
@@ -258,7 +237,6 @@ linked with the unicode enabled version of %{name}.
 Summary:	Shared library of wxGTK - Unicode enabled
 Group:		System/Libraries
 Requires:	%{name} = %{EVRD}
-Obsoletes:	%{libwx_gtk2u_propgrid}
 
 %description -n %{libwx_gtk3u_propgrid}
 wxWidgets is a free C++ library for cross-platform GUI development.
@@ -279,7 +257,6 @@ linked with the unicode enabled version of %{name}.
 Summary:	Shared library of wxGTK - Unicode enabled
 Group:		System/Libraries
 Requires:	%{name} = %{EVRD}
-Obsoletes:	%{libwx_gtk2u_qa}
 
 %description -n %{libwx_gtk3u_qa}
 wxWidgets is a free C++ library for cross-platform GUI development.
@@ -300,7 +277,6 @@ linked with the unicode enabled version of %{name}.
 Summary:	Shared library of wxGTK - Unicode enabled
 Group:		System/Libraries
 Requires:	%{name} = %{EVRD}
-Obsoletes:	%{libwx_gtk2u_ribbon}
 
 %description -n %{libwx_gtk3u_ribbon}
 wxWidgets is a free C++ library for cross-platform GUI development.
@@ -321,7 +297,6 @@ linked with the unicode enabled version of %{name}.
 Summary:	Shared library of wxGTK - Unicode enabled
 Group:		System/Libraries
 Requires:	%{name} = %{EVRD}
-Obsoletes:	%{libwx_gtk2u_richtext}
 
 %description -n %{libwx_gtk3u_richtext}
 wxWidgets is a free C++ library for cross-platform GUI development.
@@ -342,7 +317,6 @@ linked with the unicode enabled version of %{name}.
 Summary:	Shared library of wxGTK - Unicode enabled
 Group:		System/Libraries
 Requires:	%{name} = %{EVRD}
-Obsoletes:	%{libwx_gtk2u_stc}
 
 %description -n %{libwx_gtk3u_stc}
 wxWidgets is a free C++ library for cross-platform GUI development.
@@ -363,7 +337,6 @@ linked with the unicode enabled version of %{name}.
 Summary:	Shared library of wxGTK - Unicode enabled
 Group:		System/Libraries
 Requires:	%{name} = %{EVRD}
-Obsoletes:	%{libwx_gtk2u_webview}
 
 %description -n %{libwx_gtk3u_webview}
 wxWidgets is a free C++ library for cross-platform GUI development.
@@ -384,7 +357,6 @@ linked with the unicode enabled version of %{name}.
 Summary:	Shared library of wxGTK - Unicode enabled
 Group:		System/Libraries
 Requires:	%{name} = %{EVRD}
-Obsoletes:	%{libwx_gtk2u_xrc}
 
 %description -n %{libwx_gtk3u_xrc}
 wxWidgets is a free C++ library for cross-platform GUI development.
