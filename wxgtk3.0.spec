@@ -8,11 +8,11 @@
 Summary:	GTK+ port of the wxWidgets library
 Name:		wxgtk%{api}
 Version:	3.0.3
-Release:	0.1
+Release:	0.2
 License:	wxWidgets Library Licence
 Group:		System/Libraries
 Url:		http://www.wxwidgets.org/
-%if %{commit0}
+%if "%{commit0}" != ""
 Source0:	%{oname}-%{shortcommit0}.tar.gz
 %else
 Source0:	http://prdownloads.sourceforge.net/wxwindows/%{oname}-%{version}.tar.bz2
