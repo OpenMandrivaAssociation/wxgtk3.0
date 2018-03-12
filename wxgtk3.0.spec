@@ -2,23 +2,22 @@
 %define		api	3.0
 %define		major	0
 
-%global commit0 f90b768ea040529fe33fda7e20f5fe2765de1dd0
+%global commit0 %{nil}
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 Summary:	GTK+ port of the wxWidgets library
 Name:		wxgtk%{api}
-Version:	3.0.3
-Release:	0.2
+Version:	3.0.4
+Release:	1
 License:	wxWidgets Library Licence
 Group:		System/Libraries
 Url:		http://www.wxwidgets.org/
 %if "%{commit0}" != ""
 Source0:	%{oname}-%{shortcommit0}.tar.gz
 %else
-Source0:	http://prdownloads.sourceforge.net/wxwindows/%{oname}-%{version}.tar.bz2
+Source0:	https://github.com/wxWidgets/wxWidgets/releases/download/v%{version}/%{oname}-%{version}.tar.bz2
 %endif
 Patch0:		wxWidgets-3.0.0-locales.patch
-Patch1:		gst1.0.patch
 # abi check is useless as it reports different abi used between clang and gcc
 # however clang just hard codes a def to an old abi version, its not actually
 # a different abi
@@ -35,7 +34,7 @@ BuildRequires:	pkgconfig(libpng)
 BuildRequires:	pkgconfig(libtiff-4)
 BuildRequires:	pkgconfig(sdl)
 BuildRequires:	pkgconfig(sm)
-BuildRequires:	pkgconfig(webkitgtk-3.0)
+BuildRequires:	pkgconfig(webkit2gtk-4.0)
 BuildRequires:	pkgconfig(x11)
 BuildRequires:	pkgconfig(xinerama)
 BuildRequires:	pkgconfig(xxf86vm)
@@ -348,6 +347,7 @@ linked with the unicode enabled version of %{name}.
 
 %files -n %{libwx_gtk3u_webview}
 %{_libdir}/libwx_gtk3u_webview-%{api}.so.%{major}*
+%{_libdir}/wx/3.0/web-extensions/webkit2_extu-3.0.so
 
 #----------------------------------------------------------------------------
 
@@ -432,7 +432,7 @@ the wxWidgets library.
 #----------------------------------------------------------------------------
 
 %prep
-%if %{commit0}
+%if "%{commit0}" != ""
 %setup -q -n %{oname}-%{commit0}
 %else
 %setup -q -n %{oname}-%{version}
@@ -454,7 +454,7 @@ sed -i -e 's|/lib|/%{_lib}|' src/unix/stdpaths.cpp
 CFLAGS="%{optflags} -fno-strict-aliasing"
 CXXFLAGS="%{optflags} -fno-strict-aliasing"
 
-%if %{commit0}
+%if "%{commit0}" != ""
 #For snapshots, mo files need to be generated
 pushd locale
 make allmo
