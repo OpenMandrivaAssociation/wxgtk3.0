@@ -25,6 +25,7 @@ Patch2:		wxWidgets-3.0.2-disable_abi_check.patch
 BuildRequires:	bison
 BuildRequires:	flex
 BuildRequires:	jpeg-devel
+BuildRequires:	glibc-static-devel
 BuildRequires:	pkgconfig(expat)
 BuildRequires:	pkgconfig(glu)
 BuildRequires:	pkgconfig(gstreamer-1.0)
