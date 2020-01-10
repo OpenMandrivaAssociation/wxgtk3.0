@@ -438,7 +438,7 @@ the wxWidgets library.
 %else
 %setup -q -n %{oname}-%{version}
 %endif
-%apply_patches
+%autopatch -p1
 
 sh autogen.sh
 #autoreconf -fiv -I `pwd`/build/aclocal
