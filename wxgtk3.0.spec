@@ -7,8 +7,8 @@
 
 Summary:	GTK+ port of the wxWidgets library
 Name:		wxgtk%{api}
-Version:	3.0.4
-Release:	5
+Version:	3.0.5
+Release:	1
 License:	wxWidgets Library Licence
 Group:		System/Libraries
 Url:		http://www.wxwidgets.org/
@@ -494,11 +494,10 @@ popd
 	--enable-mediactrl \
 	--enable-dataviewctrl
 
-%make
+%make_build
 
 %install
-%makeinstall_std
+%make_install
 %find_lang wxstd-%{api}
 %find_lang wxmsw-%{api}
 cat wxmsw-%{api}.lang >> wxstd-%{api}.lang
-
