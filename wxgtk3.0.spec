@@ -11,7 +11,7 @@ Version:	3.0.5.1
 Release:	4
 License:	wxWidgets Library Licence
 Group:		System/Libraries
-Url:		http://www.wxwidgets.org/
+Url:		https://www.wxwidgets.org/
 %if "%{commit0}" != ""
 Source0:	%{oname}-%{shortcommit0}.tar.gz
 %else
