@@ -8,7 +8,7 @@
 Summary:	GTK+ port of the wxWidgets library
 Name:		wxgtk%{api}
 Version:	3.0.5.1
-Release:	4
+Release:	5
 License:	wxWidgets Library Licence
 Group:		System/Libraries
 Url:		https://www.wxwidgets.org/
@@ -18,10 +18,12 @@ Source0:	%{oname}-%{shortcommit0}.tar.gz
 Source0:	https://github.com/wxWidgets/wxWidgets/releases/download/v%{version}/%{oname}-%{version}.tar.bz2
 %endif
 Patch0:		wxWidgets-3.0.0-locales.patch
+Patch1:		wxWidgets-3.0.2-fix_build.patch
 # abi check is useless as it reports different abi used between clang and gcc
 # however clang just hard codes a def to an old abi version, its not actually
 # a different abi
 Patch2:		wxWidgets-3.0.2-disable_abi_check.patch
+
 BuildRequires:	bison
 BuildRequires:	flex
 BuildRequires:	jpeg-devel
@@ -31,11 +33,12 @@ BuildRequires:	pkgconfig(glu)
 BuildRequires:	pkgconfig(gstreamer-1.0)
 BuildRequires:	pkgconfig(gstreamer-plugins-base-1.0)
 BuildRequires:	pkgconfig(gtk+-3.0)
+BuildRequires:	pkgconfig(libmspack)
 BuildRequires:	pkgconfig(libpng)
 BuildRequires:	pkgconfig(libtiff-4)
 BuildRequires:	pkgconfig(sdl)
 BuildRequires:	pkgconfig(sm)
-BuildRequires:	pkgconfig(webkit2gtk-4.0)
+BuildRequires:	pkgconfig(webkit2gtk-4.1)
 BuildRequires:	pkgconfig(x11)
 BuildRequires:	pkgconfig(xinerama)
 BuildRequires:	pkgconfig(xxf86vm)
@@ -406,8 +409,8 @@ the wxWidgets library.
 %doc docs/
 %doc demos/
 %{_bindir}/wx-config
-%{_bindir}/wxrc
-%{_bindir}/wxrc-%{api}
+#{_bindir}/wxrc
+#{_bindir}/wxrc-%{api}
 %{_includedir}/wx-%{api}/
 %{_datadir}/aclocal/*
 %{_datadir}/bakefile/
@@ -434,11 +437,10 @@ the wxWidgets library.
 
 %prep
 %if "%{commit0}" != ""
-%setup -q -n %{oname}-%{commit0}
+%autosetup -p1 -n %{oname}-%{commit0}
 %else
-%setup -q -n %{oname}-%{version}
+%autosetup -p1 -n %{oname}-%{version}
 %endif
-%autopatch -p1
 
 sh autogen.sh
 #autoreconf -fiv -I `pwd`/build/aclocal
@@ -474,6 +476,7 @@ popd
 	--with-libjpeg=sys \
 	--with-libtiff=sys \
 	--with-zlib=sys \
+	--with-libmspack \
 	--disable-optimise \
 	--enable-calendar \
 	--enable-intl \
@@ -491,7 +494,8 @@ popd
 	--enable-graphics_ctx \
 	--enable-grid \
 	--enable-mediactrl \
-	--enable-dataviewctrl
+	--enable-dataviewctrl \
+	--enable-utf8
 
 %make_build
 
@@ -500,3 +504,4 @@ popd
 %find_lang wxstd-%{api}
 %find_lang wxmsw-%{api}
 cat wxmsw-%{api}.lang >> wxstd-%{api}.lang
+
