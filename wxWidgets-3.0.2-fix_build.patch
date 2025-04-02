@@ -25,6 +25,77 @@
                                    [
                                      USE_WEBVIEW_WEBKIT2=1
                                      CPPFLAGS="$CPPFLAGS $WEBKIT_CFLAGS"
+@@ -8558,33 +8558,26 @@ AM_PATH_CPPUNIT(1.8.0,
+     ]
+ )
+ 
++
+ for subdir in $SUBDIRS; do
+     if test -d ${srcdir}/${subdir} ; then
+         if test "$wxUSE_GUI" = "yes"; then
+             if test ${subdir} = "samples"; then
+-                dnl only take those samples which compile in the current
+-                dnl configuration and which exist
+                 makefiles="samples/Makefile.in $makefiles"
+                 for sample in $SAMPLES_SUBDIRS; do
+                     if test -d $srcdir/samples/$sample; then
+                         makefiles="samples/$sample/Makefile.in $makefiles"
+                     fi
+                 done
++
++                for subtree in $SAMPLES_SUBTREES; do
++                    makefiles="samples/$subtree/Makefile.in $makefiles"
++                done
+             else
+-                dnl assume that everything compiles for utils &c
+-                dnl any that shouldn't be built can be added to
+-                dnl DISABLED_UTILS, DISABLED_DEMOS
+-                disabled_var=DISABLED_`echo $subdir | tr '[[a-z]]' '[[A-Z]]'`
+-                eval "disabled=\$$disabled_var"
+-                disabled=/`echo X $disabled | sed 's@ @/|/@g'`/
+-                makefiles=`(cd $srcdir ; find $subdir -name Makefile.in) | $EGREP -v "$disabled"`
++                                makefiles=`(cd $srcdir ; find $subdir -name Makefile.in)`
+             fi
+         else
+-            dnl we build wxBase only
+-            dnl don't take all samples/utils, just those which build with wxBase
+             if test ${subdir} = "samples"; then
+-                dnl only take those samples which compile in the current
+-                dnl configuration and which exist
+                 makefiles="samples/Makefile.in $makefiles"
+                 for sample in `echo $SAMPLES_SUBDIRS`; do
+                     if test -d $srcdir/samples/$sample; then
+@@ -8593,21 +8586,25 @@ for subdir in $SUBDIRS; do
+                 done
+             elif test ${subdir} = "utils"; then
+                 makefiles=""
+-                for util in ifacecheck ; do
++                for util in ifacecheck wxrc ; do
+                     if test -d $srcdir/utils/$util ; then
+-                        makefiles="utils/$util/src/Makefile.in \
+-                                   $makefiles"
++                       if test -f $srcdir/utils/$util/src/Makefile.in; then
++                            makefiles="utils/$util/src/Makefile.in \
++                                       $makefiles"
++                        else
++                            makefiles="utils/$util/Makefile.in $makefiles"
++                        fi
+                     fi
+                 done
+             else
+-                dnl assume that everything compiles for tests
+                 makefiles=`(cd $srcdir ; find $subdir -name Makefile.in)`
+             fi
+         fi
+ 
+         for mkin in $makefiles ; do
+             mk=`echo $mkin | sed 's/Makefile\.in/Makefile/g'`
+-            AC_CONFIG_FILES([$mk])
++            ac_config_files="$ac_config_files $mk"
++
+         done
+     fi
+ done
 --- a/src/gtk/webview_webkit2.cpp
 +++ b/src/gtk/webview_webkit2.cpp
 @@ -252,15 +252,18 @@ wxgtk_webview_webkit_load_failed(WebKitWebView *,
@@ -54,3 +125,4 @@
  
              case SOUP_STATUS_BAD_REQUEST:
                  type = wxWEBVIEW_NAV_ERR_REQUEST;
+

@@ -28,6 +28,7 @@ BuildRequires:	bison
 BuildRequires:	flex
 BuildRequires:	jpeg-devel
 BuildRequires:	glibc-static-devel
+BuildRequires:	pkgconfig(cppunit)
 BuildRequires:	pkgconfig(expat)
 BuildRequires:	pkgconfig(glu)
 BuildRequires:	pkgconfig(gstreamer-1.0)
@@ -409,8 +410,8 @@ the wxWidgets library.
 %doc docs/
 %doc demos/
 %{_bindir}/wx-config
-#{_bindir}/wxrc
-#{_bindir}/wxrc-%{api}
+%{_bindir}/wxrc
+%{_bindir}/wxrc-%{api}
 %{_includedir}/wx-%{api}/
 %{_datadir}/aclocal/*
 %{_datadir}/bakefile/
