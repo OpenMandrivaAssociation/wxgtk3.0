@@ -24,6 +24,11 @@ Patch1:		wxWidgets-3.0.2-fix_build.patch
 # a different abi
 Patch2:		wxWidgets-3.0.2-disable_abi_check.patch
 
+BuildRequires:	autoconf
+BuildRequires:	automake
+BuildRequires:	libtool-base
+BuildRequires:	slibtool
+BuildRequires:	make
 BuildRequires:	bison
 BuildRequires:	flex
 BuildRequires:	jpeg-devel
